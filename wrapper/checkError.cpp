@@ -1,17 +1,11 @@
-#include <iostream>
+#include "checkError.h"
 #include <glad/glad.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <GLFW/glfw3.h>
+#include <iostream>
 #include <string>
+#include <assert.h>
 
-
-int main (int argc, char **argv) {
-    //调用报错函数
-    errorCheck();
-}
-
-void errorCheck () {
+void checkError()
+{
     GLenum errorCode = glGetError();
     std::string error = "";
     if (errorCode != GL_NO_ERROR) {
@@ -31,6 +25,9 @@ void errorCheck () {
             error = "Unknown error";
             break;
         }
+        std::cout<<error<<std::endl;
+        //断言防止重复输出错误值
+         assert(false);
     }
-    std::cout<<error<<std::endl;
-}
+
+} 

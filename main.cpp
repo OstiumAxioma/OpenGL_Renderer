@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <GLFW/glfw3.h>
+#include "wrapper/checkError.h"
 
 //响应窗体变化函数
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
@@ -49,7 +50,7 @@ int main(int, char **)
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
     //创建窗口对象
-    GLFWwindow *window = glfwCreateWindow(800, 600, "study OPenGL", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(800, 600, "OpenGL Renderer", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "fail to create window" << std::endl;
@@ -72,12 +73,15 @@ int main(int, char **)
 
     //设置 OpenGL 视口以及清理颜色
     glViewport(0, 0, 800, 600);
+    checkError();
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    checkError();
     //执行窗体循环
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents(); //接受并分发窗口消息
         glClear(GL_COLOR_BUFFER_BIT); //清理颜色缓冲区
+        checkError();
         //渲染操作
         //切换双缓存
         glfwSwapBuffers(window); 
