@@ -41,49 +41,19 @@ void processInput(GLFWwindow *window);
 
 int main()
 {
-    Application::getInstance()->test();
-    //初始化GLFW环境
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); //设置主版本号
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); //设置次版本号
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //设置OpenGL配置文件核心模式
-#ifdef __APPLE__
-//如果使用的是Mac OS X系统，你还需要加下面这行代码到你的初始化代码中这些配置才能起作用
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-    //创建窗口对象
-    GLFWwindow *window = glfwCreateWindow(800, 600, "OpenGL Renderer", NULL, NULL);
-    if (window == NULL)
-    {
-        std::cout << "fail to create window" << std::endl;
-        glfwTerminate();
+    if(!app->init(800, 600)){
         return -1;
-    }
-    glfwMakeContextCurrent(window); //将该窗口为绘制环境
-
-    //设置监听窗体大小变化消息
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    //设置键盘消息回调函数
-    glfwSetKeyCallback(window, keyCallBack);
-
-    //glad 加载openGL函数
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "fail to init glad" << std::endl;
-        return -1;
-    }
+    };
 
     //设置 OpenGL 视口以及清理颜色
     glViewport(0, 0, 800, 600);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     //执行窗体循环
-    while (!glfwWindowShouldClose(window))
+    while (app->update())
     {
-        glfwPollEvents(); //接受并分发窗口消息
-        GL_CALL(glClear(GL_COLOR_BUFFER_BIT)); //清理颜色缓冲区 GL_CALL是调试宏
-        //渲染操作
-        //切换双缓存
-        glfwSwapBuffers(window);     
+        GL_CALL(glClear(GL_COLOR_BUFFER_BIT)); //清理颜色缓冲区 GL_CALL是调试宏  
     }
+    app->destroy();
+    return 0;
 }
 
