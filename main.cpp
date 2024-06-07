@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <GLFW/glfw3.h>
 #include "wrapper/checkError.h"
+#include "application/Application.h"
 
 //响应窗体变化函数
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
@@ -38,8 +39,9 @@ void keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods
 }
 void processInput(GLFWwindow *window);
 
-int main(int, char **)
+int main()
 {
+    Application::getInstance()->test();
     //初始化GLFW环境
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); //设置主版本号
@@ -73,15 +75,12 @@ int main(int, char **)
 
     //设置 OpenGL 视口以及清理颜色
     glViewport(0, 0, 800, 600);
-    checkError();
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    checkError();
     //执行窗体循环
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents(); //接受并分发窗口消息
-        glClear(GL_COLOR_BUFFER_BIT); //清理颜色缓冲区
-        checkError();
+        GL_CALL(glClear(GL_COLOR_BUFFER_BIT)); //清理颜色缓冲区 GL_CALL是调试宏
         //渲染操作
         //切换双缓存
         glfwSwapBuffers(window);     
