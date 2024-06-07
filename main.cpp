@@ -84,7 +84,7 @@ int main(int, char **)
         checkError();
         //渲染操作
         //切换双缓存
-        glfwSwapBuffers(window); 
+        glfwSwapBuffers(window);     
     }
 }
 
