@@ -6,44 +6,20 @@
 #include "wrapper/checkError.h"
 #include "application/Application.h"
 
-//响应窗体变化函数
-void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-    std::cout<<"Window size"<<width<<","<<height<<std::endl;
-    //更新视口大小
-    glViewport(0, 0, width, height);
-};
-
-//键盘消息回调函数
-void keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods){
-    if(key == GLFW_KEY_W){
-
-    }
-    if (action == GLFW_PRESS)
-    {
-        /* code */
-    }
-    if (action == GLFW_RELEASE)
-    {
-        /* code */
-    }
-    if(mods == GLFW_MOD_CONTROL){
-        /* code */
-    }
-    if(mods == GLFW_MOD_SHIFT){
-        /* code */
-    }
-    std::cout<<"press"<<key<<std::endl;
-    std::cout<<"action:"<<action<<std::endl;
-    std::cout<<"mods:"<<mods<<std::endl; 
-    
+//调用Application类的窗口回调函数静态实例
+void OnResize(int width, int height)
+{
+    GL_CALL(glViewport(0,0, width, height));
+    std::cout<<"OnResize"<<std::endl;
 }
-void processInput(GLFWwindow *window);
 
 int main()
 {
     if(!app->init(800, 600)){
         return -1;
     };
+
+    app->setResizeCallBack(OnResize);
 
     //设置 OpenGL 视口以及清理颜色
     glViewport(0, 0, 800, 600);
