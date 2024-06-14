@@ -25,8 +25,8 @@ bool Application::init(const int& width, const int& height)
     mHeight = height;
     //初始化GLFW环境
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); //设置主版本号
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); //设置次版本号
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); //设置主版本号
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1); //设置次版本号
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //设置OpenGL配置文件核心模式
     #ifdef __APPLE__
     //如果使用的是Mac OS X系统，你还需要加下面这行代码到你的初始化代码中这些配置才能起作用

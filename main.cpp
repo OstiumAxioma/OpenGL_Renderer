@@ -181,6 +181,67 @@ void singleBufferVAO()
     glBindVertexArray(0);
 
 }
+
+void prepareShader()
+{
+    //1. 建立 Shader 片段
+    //定义顶点着色器 Vertex Shader
+        const char* vertexShaderSource =
+        "#version 410 core\n"
+        "layout (location = 0) in vec3 aPos;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+        "}\0";
+
+    //定义片元着色器 Fragment Shader
+        const char* fragmentShaderSource =
+        "#version 410 core\n"
+        "out vec4 FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+        "}\0";
+
+    //2. 创建 Shader 程序
+    GLuint vertexShader;
+    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+
+    GLuint fragmentShader;
+    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    //3. 为 Shader 程序输入 Shader 代码
+    //glShaderSource 函数用来为 Shader 对象上传 Shader 代码
+    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);//"\0"结尾不需要告知字符串长度
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+
+    //4. 编译 Shader 程序
+    glCompileShader(vertexShader);
+    //检查编译错误
+    int success = 0;
+    char infoLog[1024];
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if(!success){
+        glGetShaderInfoLog(vertexShader, 1024, NULL, infoLog);
+        std::cout<<"ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"<<infoLog<<std::endl;
+    }
+
+    glCompileShader(fragmentShader);
+    //检查编译错误
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    if(!success){
+        glGetShaderInfoLog(fragmentShader, 1024, NULL, infoLog);
+        std::cout<<"ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"<<infoLog<<std::endl;
+    }
+
+    //5. 检查编译错误
+}
+
+void prepareInterleavedBuffer()
+{
+
+}
+
 int main()
 {
     if(!app->init(800, 600)){
@@ -197,7 +258,8 @@ int main()
     //bindVBO();
     //singleBufferVBO();
     //interleavedBufferVBO();
-    singleBufferVAO();
+    //singleBufferVAO();
+    prepareShader();
 
     //执行窗体循环
     while (app->update())
