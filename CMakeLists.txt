@@ -17,7 +17,7 @@ find_package(glfw3 REQUIRED)
 include_directories(${GLFW_INCLUDE_DIRS})
 
 # 设置GLAD的头文件路径
-set(GLAD_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
+set(GLAD_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/thirdparty)
 include_directories(${GLAD_INCLUDE_DIR})
 
 # 添加GLAD的源文件

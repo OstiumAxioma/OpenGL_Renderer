@@ -50,6 +50,8 @@ bool Application::init(const int& width, const int& height)
         return false;
     }
 
+    glfwSetFramebufferSizeCallback(mWindow, frameBufferSizeCallback); //初始化时调用设置窗口大小改变回调函数
+
     return true;
 }
 
@@ -69,4 +71,13 @@ void Application::destroy()
 {
     glfwTerminate(); //终止GLFW
     return;
+}
+//实现窗口大小改变回调函数
+void Application::frameBufferSizeCallback(GLFWwindow* window, int width, int height)
+{
+    std::cout << "Resize" << std::endl;
+    if(Application::getInstance()->mResizeCallBack != nullptr)
+    {
+        Application::getInstance()->mResizeCallBack(width, height);//调用回调函数
+    }
 }
