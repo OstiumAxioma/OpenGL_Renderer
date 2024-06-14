@@ -215,11 +215,12 @@ void prepareShader()
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);//"\0"结尾不需要告知字符串长度
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 
+    //创建错误信息储存变量
+    int success = 0;
+    char infoLog[1024];
     //4. 编译 Shader 程序
     glCompileShader(vertexShader);
     //检查编译错误
-    int success = 0;
-    char infoLog[1024];
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
     if(!success){
         glGetShaderInfoLog(vertexShader, 1024, NULL, infoLog);
@@ -234,7 +235,22 @@ void prepareShader()
         std::cout<<"ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"<<infoLog<<std::endl;
     }
 
-    //5. 检查编译错误
+    //5. 建立 Shader 程序Shell
+    GLuint shaderProgram = 0;
+    glCreateProgram();
+
+    //6. 放入 Shader 编译结果
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+
+    //7. 链接 Shader 程序成为可执行程序
+    glLinkProgram(shaderProgram);
+    //检查链接错误
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if(!success){
+        glGetProgramInfoLog(shaderProgram, 1024, NULL, infoLog);
+        std::cout<<"ERROR::SHADER::PROGRAM::LINK_FAILED\n"<<infoLog<<std::endl;
+    }
 }
 
 void prepareInterleavedBuffer()
