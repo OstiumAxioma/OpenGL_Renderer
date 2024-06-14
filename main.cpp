@@ -54,8 +54,73 @@ void bindVBO()
 
     //3. 向 VBO 插槽写入数据开辟显存空间
     GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW)); //GL_STATIC_DRAW表示数据不会或几乎不会改变, GL_DYNAMIC_DRAW表示数据会被改变很多
+}
 
-    //
+//多属性分别绑定 VBO
+void singleBufferVBO()
+{
+    //1. 准备顶点位置与颜色数据
+    //2. 为位置&颜色数据分别创建 VBO
+    //3. 给两个 VBO 分别填充数据
+
+    //1.1 三角顶点位置数据
+    float positions[] = {
+        -0.5f, -0.5f, 0.0f, // 左下角
+        0.5f, -0.5f, 0.0f, // 右下角
+        0.0f, 0.5f, 0.0f // 上中角
+    };
+
+    //1.2 三角顶点颜色数据
+    float colors[] = {
+        1.0f, 0.0f, 0.0f, // 左下角
+        0.0f, 1.0f, 0.0f, // 右下角
+        0.0f, 0.0f, 1.0f // 上中角
+    };
+
+    //2.1 创建位置 VBO
+    GLuint posVBO;
+    GL_CALL(glGenBuffers(1, &posVBO));
+
+    //2.2 创建颜色 VBO
+    GLuint colorVBO;
+    GL_CALL(glGenBuffers(1, &colorVBO));
+
+    //3.1 绑定位置 VBO
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, posVBO));
+
+    //3.2 绑定颜色 VBO
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, colorVBO));
+
+    //3.3 填充位置 VBO
+    GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW));
+
+    //3.4 填充颜色 VBO
+    GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW));
+
+}
+
+//多属性交叉绑定 VBO
+void interleavedBufferVBO()
+{
+    //1. 准备顶点位置与颜色数据
+    //2. 为位置&颜色数据创建一个 VBO
+    //3. 给 VBO 填充数据
+
+    //1. 三角顶点位置与颜色数据
+    float vertices[] = {
+        // 位置              // 颜色
+        -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // 左下角, 红色
+        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // 右下角, 绿色
+        0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f // 上中角, 蓝色
+    };
+
+    //2. 创建一个 VBO
+    GLuint VBO = 0;
+    GL_CALL(glGenBuffers(1, &VBO));
+
+    //3. 绑定 VBO
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, VBO));
+    GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
 }
 
 int main()
@@ -71,7 +136,9 @@ int main()
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
     //prepareVBO();
-    bindVBO();
+    //bindVBO();
+    //singleBufferVBO();
+    interleavedBufferVBO();
 
     //执行窗体循环
     while (app->update())
