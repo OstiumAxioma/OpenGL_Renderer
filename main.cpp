@@ -237,7 +237,7 @@ void prepareShader()
 
     //5. 建立 Shader 程序Shell
     GLuint shaderProgram = 0;
-    glCreateProgram();
+    shaderProgram = glCreateProgram();
 
     //6. 放入 Shader 编译结果
     glAttachShader(shaderProgram, vertexShader);
@@ -251,6 +251,10 @@ void prepareShader()
         glGetProgramInfoLog(shaderProgram, 1024, NULL, infoLog);
         std::cout<<"ERROR::SHADER::PROGRAM::LINK_FAILED\n"<<infoLog<<std::endl;
     }
+
+    //8. 清理 Shader 程序
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
 }
 
 void prepareInterleavedBuffer()
