@@ -123,6 +123,64 @@ void interleavedBufferVBO()
     GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
 }
 
+//多属性分别绑定 VBO 并构建 VAO 
+void singleBufferVAO()
+{
+    //1. 准备顶点位置与颜色数据
+    //2. 为位置&颜色数据分别创建 VBO 并绑定
+    //3. 创建 VAO 并绑定
+    //4. 向 VAO 压入描述信息
+
+    //1.1 三角顶点位置数据
+    float positions[] = {
+        -0.5f, -0.5f, 0.0f, // 左下角
+        0.5f, -0.5f, 0.0f, // 右下角
+        0.0f, 0.5f, 0.0f // 上中角
+    };
+
+    //1.2 三角顶点颜色数据
+    float colors[] = {
+        1.0f, 0.0f, 0.0f, // 左下角
+        0.0f, 1.0f, 0.0f, // 右下角
+        0.0f, 0.0f, 1.0f // 上中角
+    };
+
+    //2.1 创建 VBO
+    GLuint posVBO;
+    GL_CALL(glGenBuffers(1, &posVBO));
+
+    GLuint colorVBO;
+    GL_CALL(glGenBuffers(1, &colorVBO));
+
+    //2.2 绑定 VBO
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, posVBO));
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, colorVBO));
+
+    //2.3 填充 VBO 数据
+    GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW));
+    GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW));
+
+    //3.1 创建 VAO
+    GLuint VAO;
+    GL_CALL(glGenVertexArrays(1, &VAO));
+
+    //3.2 绑定 VAO
+    GL_CALL(glBindVertexArray(VAO));
+
+    //4.1 压入位置数据
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, posVBO));//注意，接下来的操作全部都是基于当前绑定的 VBO，如果要操作别的 VBO，需要重新绑定
+    GL_CALL(glEnableVertexAttribArray(0));//启用VAO的 0 号index，接下来 posVBO 的数据会压入到 0 号 index
+    GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));//偏移量strip为 3 * sizeof(float)，因为位置数据XYZ为 3 个 float 一个跨度
+
+    //4.2 压入颜色数据
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, colorVBO));//重新绑定 colorVBO
+    GL_CALL(glEnableVertexAttribArray(1));//启用VAO的 1 号index，接下来 colorVBO 的数据会压入到 1 号 index
+    GL_CALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));//注意，这里的 stride 为 3 * sizeof(float)，因为颜色数据 RGB 共 3 个 float 一个跨度
+
+    //5. 解绑 VAO
+    glBindVertexArray(0);
+
+}
 int main()
 {
     if(!app->init(800, 600)){
@@ -138,7 +196,8 @@ int main()
     //prepareVBO();
     //bindVBO();
     //singleBufferVBO();
-    interleavedBufferVBO();
+    //interleavedBufferVBO();
+    singleBufferVAO();
 
     //执行窗体循环
     while (app->update())
