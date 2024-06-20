@@ -12,7 +12,7 @@ void OnResize(int width, int height)
     GL_CALL(glViewport(0,0, width, height));
     std::cout<<"OnResize"<<std::endl;
 }
-
+GLuint VBO, VAO, program;
 //初始化 VBO
 void prepareVBO()
 {
@@ -259,7 +259,35 @@ void prepareShader()
 
 void prepareInterleavedBuffer()
 {
+    //交叉创建顶点与颜色数据
+    float vertices[] = {
+        // 位置              // 颜色
+        -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // 左下角, 红色
+        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // 右下角, 绿色
+        0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f // 上中角, 蓝色
+    };
 
+    //1. 创建一个 VBO
+    VBO = 0;
+    GL_CALL(glGenBuffers(1, &VBO));
+
+    GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, VBO));
+    GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
+
+    VAO = 0;
+    GL_CALL(glGenVertexArrays(1, &VAO));
+    GL_CALL(glBindVertexArray(VAO));
+    //绑定 VBO
+    GL_CALL((glBindBuffer(GL_ARRAY_BUFFER, VBO)));
+    //设置顶点属性指针
+    GL_CALL(glEnableVertexAttribArray(0));
+    GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0));
+    //设置颜色属性指针
+    GL_CALL(glEnableVertexAttribArray(1));
+    GL_CALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float))));
+
+    //解绑 VAO
+    GL_CALL(glBindVertexArray(0));
 }
 
 int main()
@@ -280,6 +308,7 @@ int main()
     //interleavedBufferVBO();
     //singleBufferVAO();
     prepareShader();
+    prepareInterleavedBuffer();
 
     //执行窗体循环
     while (app->update())
