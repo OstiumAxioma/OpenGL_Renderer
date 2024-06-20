@@ -290,6 +290,37 @@ void prepareInterleavedBuffer()
     GL_CALL(glBindVertexArray(0));
 }
 
+void prepareVAOForGLTriangle()
+{
+    //1. 准备顶点数据
+    float vertices[] = {
+        -0.5f, -0.5f, 0.0f, // 左下角
+        0.5f, -0.5f, 0.0f, // 右上角
+        0.0f, 0.5f, 0.0f, // 右下角
+        0.5f, 0.5f, 0.0f // 左下角
+    };
+
+    //2. 创建一个 VBO
+    VBO = 0;
+    GL_CALL(glGenBuffers(1, &VBO));
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    //3. 创建一个 VAO并绑定
+    GL_CALL(glGenVertexArrays(1, &VAO));
+    GL_CALL(glBindVertexArray(VAO));
+
+    //4. 描述位置属性
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    GL_CALL(glEnableVertexAttribArray(0));
+    GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
+
+    //5. 解绑 VAO
+    glBindVertexArray(0);
+
+}
+
 void render()
 {
     GL_CALL(glClear(GL_COLOR_BUFFER_BIT)); //清理颜色缓冲区 GL_CALL是调试宏  
@@ -321,9 +352,11 @@ int main()
     //bindVBO();
     //singleBufferVBO();
     //interleavedBufferVBO();
-    //singleBufferVAO();
+    
     prepareShader();
-    prepareInterleavedBuffer();
+    //singleBufferVAO();
+    //prepareInterleavedBuffer();
+    prepareVAOForGLTriangle();
 
     //执行窗体循环
     while (app->update())
