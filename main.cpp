@@ -12,7 +12,7 @@ void OnResize(int width, int height)
     GL_CALL(glViewport(0,0, width, height));
     std::cout<<"OnResize"<<std::endl;
 }
-GLuint VBO, VAO, program;
+GLuint VBO, VAO, shaderProgram;
 //初始化 VBO
 void prepareVBO()
 {
@@ -236,7 +236,7 @@ void prepareShader()
     }
 
     //5. 建立 Shader 程序Shell
-    GLuint shaderProgram = 0;
+    shaderProgram = 0;
     shaderProgram = glCreateProgram();
 
     //6. 放入 Shader 编译结果
@@ -290,6 +290,21 @@ void prepareInterleavedBuffer()
     GL_CALL(glBindVertexArray(0));
 }
 
+void render()
+{
+    GL_CALL(glClear(GL_COLOR_BUFFER_BIT)); //清理颜色缓冲区 GL_CALL是调试宏  
+
+    //1. 绑定当前 program
+    glUseProgram(shaderProgram);
+
+    //2. 绑定 VAO
+    GL_CALL(glBindVertexArray(VAO));
+
+    //3. 绘制图形
+    GL_CALL(glDrawArrays(GL_TRIANGLES, 0, 3));
+
+}
+
 int main()
 {
     if(!app->init(800, 600)){
@@ -313,7 +328,7 @@ int main()
     //执行窗体循环
     while (app->update())
     {
-        GL_CALL(glClear(GL_COLOR_BUFFER_BIT)); //清理颜色缓冲区 GL_CALL是调试宏  
+        render();
     }
     app->destroy();
     return 0;
